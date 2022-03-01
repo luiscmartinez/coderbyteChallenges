@@ -9,13 +9,19 @@ https.get("https://coderbyte.com/api/challenges/json/age-counting", (res) => {
     rawData += chunk;
   });
   res.on("end", () => {
-    const parseData = JSON.parse(rawData)
+    const MINIMUM_AGE = 50;
+    const INDEX_VALUE = 1;
+    // reducing to a single value
+    const countOverMinimum = JSON.parse(rawData)
       .data.split(", ")
-      .filter(
-        (eli) => eli.includes("age") && Number(eli.replace(/\D/g, "")) >= 50
-      ).length;
+      .reduce((acc, cur) => {
+        // Number() will evaluate to a number or "NaN"
+        return Number(cur.split("=")[INDEX_VALUE]) > MINIMUM_AGE
+          ? acc + 1 // count
+          : acc; // don't count
+      }, 0);
 
-    console.log(tokenChallenge(parseData));
+    console.log(tokenChallenge(countOverMinimum)); // result= 12X9iX6kXlrX8b
 
     function tokenChallenge(i) {
       const target = i + "9iw6kdlr48b";
